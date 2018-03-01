@@ -1,0 +1,13 @@
+---
+output: github_document
+---
+
+<!-- README-->
+
+```{r, echo = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "README-"
+)
+```

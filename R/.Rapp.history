@@ -1,0 +1,525 @@
+lm(ais$Ht~ais$Wt)
+traceplot(mcmc_samples2)
+e <- extract(mcmc_samples2, permuted = TRUE) # return a list of arrays
+par(mfrow=c(1,2))
+hist(e[[1]], main = "Posterior Distribution of Beta_0")
+hist(e[[2]], main = "Posterior Distribution of Beta_1")
+library(alr3)
+library(rstan)
+data(ais)
+?ais
+# The model specification#
+model_string <- "#
+data {#
+  int<lower=0> N;#
+  real y[N];#
+}#
+#
+parameters {#
+  real mu;#
+  real<lower=0> sigma;#
+}#
+model{#
+  y ~ normal(mu, sigma);#
+  mu ~ normal(0, 100);#
+  sigma ~ lognormal(0, 4);#
+}"
+str(ais)
+mcmc_samples <- stan(model_code=model_string, data=list(N=202, y=ais$Ht), pars=c("mu", "sigma"), chains=3, iter=30000, warmup=500)
+print(mcmc_samples)
+mean(ais$Ht) ## y-bar to compare to posterior mean
+traceplot(mcmc_samples)
+sqrt(100/12)
+pnorm(-1.5)
+sqrt(0.46*0.54/400)
+(0.42-0.46)/sqrt(0.46*0.54/400)
+pnorm(-1.605145, lower.tail=False)
+pnorm(-1.605145, lower.tail=T)
+rbinom(1,n ,0.7)
+n=49
+rbinom(1,n ,0.7)
+rbinom(1,n ,0.7)/n
+n=25
+rbinom(1,n ,0.7)/n
+n = 100
+rbinom(1,n ,0.7)/n
+n=81
+rbinom(1,n ,0.7)/n
+n= 64
+rbinom(1,n ,0.7)/n
+x = c(0.08, 0.12, 0.20, 0.25, 0.32, 1, 2, 4)
+y = c(30, 35, 300, 50, 70, 99, 200, 250)
+plot(x,y)
+n = 10#
+for(i in 1:n){#
+	print(n)#
+}
+n = 10#
+for(i in 1:n){#
+	print(i)}
+E = c( 50, 23, 28, 34, 14, 54, 46, 52, 53)#
+M = c(38, 28, 14, 26, 18, 40, 23, 30, 27)
+hist(E)
+hist(M, main = "Math Scores", breaks = 10)
+par(mfrow = c(1,2))#
+hist(E, main = "English Scores", breaks = 8)#
+hist(M, main = "Math Scores", breaks = 8)
+par(mfrow = c(1,2))#
+hist(E, main = "English Scores", breaks = 8, xlab = "")#
+hist(M, main = "Math Scores", breaks = 8, xlab = "")
+hist(E, main = "English Scores", breaks = 8, xlab = "", col = "red")
+hist(E, main = "English Scores", breaks = 8, xlab = "", col = "aqua")
+hist(E, main = "English Scores", breaks = 8, xlab = "", col = "blue")
+hist(E, main = "English Scores", breaks = 8, xlab = "", col = "lightblue")
+hist(M, main = "Math Scores", breaks = 8, xlab = "", col = "lightblue")
+par(mfrow = c(1,2))#
+hist(E, main = "English Scores", breaks = 8, xlab = "", col = "lightblue")#
+hist(M, main = "Math Scores", breaks = 8, xlab = "", col = "lightblue")
+hist(E, main = "English Scores", breaks = 8, xlab = "", col = "lightblue", xlim = c(0, 60))
+hist(M, main = "Math Scores", breaks = 8, xlab = "", col = "lightblue", xlim = c(0, 60))
+E = c( 50, 23, 28, 34, 14, 54, 46, 52, 53)#
+M = c(38, 28, 14, 26, 18, 40, 23, 30, 27)
+cor.test(E,M)
+0.6794456 *sqrt(7/(1-0.6794456^2))
+setwd("~/Desktop/")
+schools  = read.csv("schools.csv", header = T)
+schools#
+#
+library(rstan)#
+#
+J <- nrow (schools)#
+y <- schools$Estimate#
+sigma <- schools$SE
+model_string_4 = "data {#
+int<lower=0> J; 			// # schools#
+real y[J]; 					// estimated treatment#
+real<lower=0> sigma[J]; 	// std err of effect#
+}#
+parameters {#
+real theta[J];#
+real mu;					// mean for schools#
+real<lower=0> tau; 			// sd between schools#
+}#
+model { #
+theta ~ normal(mu, tau);	// there's a hidden j #
+y ~ normal(theta, sigma);   // there's a hidden j #
+}"
+schools_fit4 = stan(model_code = model_string_4, data = c("J", "y", "sigma"), pars = c("theta", "mu","tau"),  iter=100000, chains=3, warmup = 500)#
+print(schools_fit4)#
+#
+print(schools_fit4,"theta[1]",probs=c(.025,.975)) #
+schools_sim <- extract (schools_fit4, permuted=TRUE)
+n_sims = length(schools_sim$lp__)
+n_sims
+best = rep(NA, n_sims)
+best = rep(NA, n_sims)#
+for(i in 1:n_sims){#
+	best[i] = which(schools_sim$theta[i,] == max(schools_sim$theta[i,]))#
+	if (i%%100) print(i)#
+}
+table(bets)
+table(best)
+table(best)/n_sims
+mat = matrix(NA, nrow = 8, ncol = 8)
+mat
+for(i in 1:8){#
+	for(j in 2:8){#
+		mat[i,j] = mean(schools_sim$theta[,i] > schools_sim$theta[,j])#
+	}#
+}
+mat
+which(mat == max(mat))
+max(mat)
+mat = matrix(NA, nrow = 8, ncol = 8)#
+#
+for(i in 1:8){#
+	for(j in 1:8){#
+		mat[i,j] = mean(schools_sim$theta[,i] > schools_sim$theta[,j])#
+	}#
+}
+mat
+?mapply
+mapply(max, mat)
+schools
+rm(list=ls())#
+# install.packages('aplore3')#
+library(aplore3)#
+data(burn1000)#
+attach(burn1000)
+y <- ifelse(death=="Dead", 1, 0)
+p <- mean(y)
+p
+p/(1-p)
+x <- as.numeric(inh_inj)-1
+p1 <- mean(y[x==1])
+o1 <- p1/(1-p1)
+p2 <- mean(y[x==0])
+o2 <- p2/(1-p2)
+or <- o1/o2
+or
+exp(coef(glm(y~x, family='binomial')))
+rm(list=ls())
+library(aplore3)
+data(burn1000)
+attach(burn1000)
+y <- ifelse(death=="Dead", 1, 0)
+table(y)
+i=1
+which(schools_sim$theta[i,] == max(schools_sim$theta[i,]))
+data(burn1000)
+str(burn1000)
+table(burn1000)
+table(burn1000$race)
+VarCorr(m2b)
+dat <- read.csv('simdata.csv')#
+attach(dat)#
+#question 1#
+# no of class rooms#
+length(unique(ClassID))#
+# avg. no of students per class room#
+mean(tapply(Y1, ClassID, length))#
+library(nlme)#
+X1 <- factor(X1)#
+X2 <- factor(X2)#
+m1 <- lm(Y1 ~ X1+X2+X3)#
+m1b <- lme(Y1 ~ X1+X2+X3, random=~1|ClassID)#
+VarCorr(m1b)#
+m1c <- lme4::lmer(Y1 ~ X1+X2+X3+(1|ClassID))#
+AIC(m1)#
+AIC(m1b)#
+BIC(m1)#
+BIC(m1b)#
+m2 <- lm(Y2 ~ X1+X2+X3)#
+m2b <- lme(Y2 ~ X1+X2+X3, random=~1|ClassID)#
+VarCorr(m2b)#
+m2c <- lme(Y2 ~ X1+X2+X3, random=~1|ClassID, method='ML')#
+AIC(m2)#
+AIC(m2b)#
+BIC(m2)#
+BIC(m2b)
+dat <- read.csv('simdata.csv')#
+attach(dat)
+#question 1#
+# no of class rooms#
+length(unique(ClassID))
+mean(tapply(Y1, ClassID, length))#
+library(nlme)#
+X1 <- factor(X1)#
+X2 <- factor(X2)#
+m1 <- lm(Y1 ~ X1+X2+X3)#
+m1b <- lme(Y1 ~ X1+X2+X3, random=~1|ClassID)#
+VarCorr(m1b)#
+m1c <- lme4::lmer(Y1 ~ X1+X2+X3+(1|ClassID))
+AIC(m1)
+AIC(m1b)
+BIC(m1)
+BIC(m1b)
+AIC(m2)#
+AIC(m2b)#
+BIC(m2)#
+BIC(m2b)#
+AIC(m2)#
+AIC(m2c)#
+BIC(m2)#
+BIC(m2c)
+m2 <- lm(Y2 ~ X1+X2+X3)#
+m2b <- lme(Y2 ~ X1+X2+X3, random=~1|ClassID)#
+VarCorr(m2b)#
+m2c <- lme(Y2 ~ X1+X2+X3, random=~1|ClassID, method='ML')#
+AIC(m2)#
+AIC(m2b)#
+BIC(m2)#
+BIC(m2b)#
+AIC(m2)#
+AIC(m2c)#
+BIC(m2)#
+BIC(m2c)
+k = 5#
+ITER = 10000#
+t.mu = k#
+t.sigmasq = 2*k#
+#
+s.mean = rep(0,(ITER-2))#
+s.var = rep(0, (ITER-2))#
+#
+for (i in 3:ITER){#
+  sample = rchisq(n = i, df = k)#
+  s.mean[i - 2] = mean(sample)#
+  s.var[i - 2] = var(sample)#
+}#
+#
+plot(x = 3:ITER, y = s.mean)#
+abline(h = t.mu, col = "red", lty = 2)
+n = c( 10, 100, 500, 1000,5000, 10000)#
+par(mfrow = c(2, 3))#
+#
+for (i in 1:6) {#
+  x = rchisq(n = n[i],df = 1 )#
+  y = rnorm(n = n[i], mean = 0, sd = 1)#
+  plot(ecdf(x), col = "red" , add = T)#
+  plot(ecdf(y^2), main = paste("n =", n[i]))#
+}
+n = c( 10, 100, 500, 1000,5000, 10000)
+par(mfrow = c(2, 3))
+for (i in 1:6) {
+x = rchisq(n = n[i],df = 1 )
+y = rnorm(n = n[i], mean = 0, sd = 1)
+plot(ecdf(x), col = "red" , add = T)
+plot(ecdf(y^2), main = paste("n =", n[i]))
+}
+## Question 2 - Part 3 #
+#
+n = c( 10, 100, 500, 1000, 5000, 10000)#
+par(mfrow = c(2, 3))#
+#
+for (i in 1:6) {#
+  x = rchisq(n = n[i],df = 1 )#
+  y = rchisq(n = n[i],df = 1 )#
+  plot(ecdf(x), col = "red" , add = T)#
+  plot(ecdf(x+y), main = paste("n =", n[i]))#
+}
+n = c(10, 100, 500, 1000, 5000, 10000)#
+par(mfrow = c(2, 3))#
+#
+for (i in 1:6) {#
+  x = rchisq(n = n[i],df = 5 )#
+  y = rnorm(n = n[i], mean = 0, sd = 1)#
+  plot(ecdf(y), col = "red" , add = T)#
+  plot(ecdf((x-5)/sqrt(10)), main = paste("n =", n[i]))#
+}
+?rle
+set.seed(500)#
+ITER = 1000#
+mat = matrix(c(0),nrow = ITER, ncol = 2)#
+#
+for (i in 1:ITER) {#
+  x = FlipACoin(100)#
+  y = rle(x)#
+  z = ifelse(which(y$lengths >= 6),1,0)#
+  mat[i,1] = i#
+  mat[i,2] = ifelse(z[1]==1,1,0)#
+}#
+print(sum(mat[,2],na.rm=T)/ITER)
+other = rnorm(n, 30, 5)
+n = 10000#
+#
+pre = rnorm(n, 50, 10)#
+stem = c(rep(0, n/2), rep(1, n/2))#
+#
+other = rnorm(n, 30, 5)
+baseline = 5
+treat = 10
+post = rnorm(n, baseline + pre + 2*other + treat*stem, 1)
+par(mfrow = c(1,2))
+plot(post ~ pre, col = stem+1, main = "red = stem, black = not stem")
+boxplot(c(post-pre) ~ stem, main = "Change on Measure", ylab = "Post - Pre", names = c("Not", "STEM"))
+mod1 = lm(post ~ pre + other +  stem)
+summary(mod1)
+mod2 = lm(scale(post)~scale(pre) + stem + treat)
+mod2 = lm(scale(post)~scale(pre) + stem + other)
+summary(mod2)
+2.000105/sd(post)
+mod4 = lm(post ~ pre + stem + scale(other))
+summary(mod4)
+summary(mod1)
+10.002484 /sd(post)
+setwd("~/Dropbox/Research/Completed Papers/IMTest/R")#
+remove.packages("IMTest")#
+install.packages("~/Dropbox/Research/Completed Papers/IMTest", repos=NULL, type = "source")#
+#
+library(IMTest)#
+#
+library(lme4)#
+library(reshape2)#
+#
+data(VerbAgg)#
+#
+x = dcast(VerbAgg[,c( "id","item", "resp")], id~item)#
+#
+for(i in 2:25){#
+  x[,i] = factor(x[,i], levels = c("no", "perhaps", "yes"))#
+}#
+#
+my_data = x[,2:13]#
+#
+J = dim(my_data)[[2]]#
+n = dim(my_data)[[1]]#
+# Create index vectors#
+ind = list()#
+for(i in 1:J){#
+  ind[[i]] = rep(0, J*2)#
+  ind[[i]][(2*i-1):(2*i)] = 1#
+}#
+#
+col = split(rep(c(1:3), J), rep(1:J, each = 3))#
+temp_data = collapse_data(my_data, col, "rasch")#
+mod = gpcm_IMT(temp_data$data, constraint = "rasch")
+## matrix to store results#
+pval = matrix(c(0), nrow = J, ncol = 3)
+i=1
+test_fit = IMT(mod, "rasch", R = 100000, ind[[i]])
+print(test_fit)
+print(test_fit)
+pval[i,1] = pchisq(test_fit$Tstat, test_fit$df, lower.tail = F)
+pval
+help(package = "IMTest")
+remove.packages("IMTest")
+install.packages("IMTest")
+install.packages("IMTest")
+remove.packages("IMTest")
+remove.packages("IMTest")
+install.packages("~/Drop	box/Research/Completed Papers/IMTest", repos = NULL, type = "source")
+?gh
+getAnywhere(gh)
+help(gh)
+load("/Users/daphnaharel/Dropbox/Research/Completed Papers/IMTest/data/gh.rda")
+load("/Users/daphnaharel/Dropbox/Research/Completed Papers/IMTest/data/gh.rda")
+x
+load("/Users/daphnaharel/Dropbox/Research/Completed Papers/IMTest/R/sysdata.rda")
+sysdata
+load("/Users/daphnaharel/Dropbox/Research/ActivePapers/OTAmethods/J8N250B1I100.RData")
+mean(m_load > m_ota)
+mean(m_ota > m_load)
+mean(m_load == m_ota)
+mean(m_ota > m_load)#
+mean(m_load > m_ota)#
+mean(m_load == m_ota)
+load("/Users/daphnaharel/Dropbox/Research/ActivePapers/OTAmethods/J8N500B1I100.RData")
+mean(m_ota < m_load)#
+mean(m_load < m_ota)#
+mean(m_load == m_ota)
+load("/Users/daphnaharel/Dropbox/Research/ActivePapers/OTAmethods/J8N1000B1I100.RData")
+mean(m_ota < m_load)#
+mean(m_load < m_ota)#
+mean(m_load == m_ota)
+load("/Users/daphnaharel/Dropbox/Research/ActivePapers/OTAmethods/J8N5000B1I100.RData")
+mean(m_ota < m_load)#
+mean(m_load < m_ota)#
+mean(m_load == m_ota)
+load("/Users/daphnaharel/Dropbox/Research/ActivePapers/OTAmethods/J8N250B2I100.RData")
+mean(m_ota < m_load)#
+mean(m_load < m_ota)#
+mean(m_load == m_ota)
+load("/Users/daphnaharel/Dropbox/Research/ActivePapers/OTAmethods/J8N500B2I100.RData")
+mean(m_ota < m_load)#
+mean(m_load < m_ota)#
+mean(m_load == m_ota)
+load("/Users/daphnaharel/Dropbox/Research/ActivePapers/OTAmethods/J8N1000B2I100.RData")
+mean(m_ota < m_load)#
+mean(m_load < m_ota)#
+mean(m_load == m_ota)
+load("/Users/daphnaharel/Dropbox/Research/ActivePapers/OTAmethods/J8N5000B2I100.RData")
+mean(m_ota < m_load)#
+mean(m_load < m_ota)#
+mean(m_load == m_ota)
+load("/Users/daphnaharel/Dropbox/Research/ActivePapers/OTAmethods/J16N250B1I100.RData")
+mean(m_ota < m_load)#
+mean(m_load < m_ota)#
+mean(m_load == m_ota)
+load("/Users/daphnaharel/Dropbox/Research/ActivePapers/OTAmethods/J16N500B1I100.RData")
+mean(m_ota < m_load)#
+mean(m_load < m_ota)#
+mean(m_load == m_ota)
+load("/Users/daphnaharel/Dropbox/Research/ActivePapers/OTAmethods/J16N1000B1I100.RData")
+mean(m_ota < m_load)#
+mean(m_load < m_ota)#
+mean(m_load == m_ota)
+load("/Users/daphnaharel/Dropbox/Research/ActivePapers/OTAmethods/J16N5000B1I100.RData")
+mean(m_ota < m_load)#
+mean(m_load < m_ota)#
+mean(m_load == m_ota)
+load("/Users/daphnaharel/Dropbox/Research/ActivePapers/OTAmethods/J16N250B2I100.RData")
+mean(m_ota < m_load)#
+mean(m_load < m_ota)#
+mean(m_load == m_ota)
+load("/Users/daphnaharel/Dropbox/Research/ActivePapers/OTAmethods/J16N500B2I100.RData")
+mean(m_ota < m_load)#
+mean(m_load < m_ota)#
+mean(m_load == m_ota)
+load("/Users/daphnaharel/Dropbox/Research/ActivePapers/OTAmethods/J16N1000B2I100.RData")
+mean(m_ota < m_load)#
+mean(m_load < m_ota)#
+mean(m_load == m_ota)
+load("/Users/daphnaharel/Dropbox/Research/ActivePapers/OTAmethods/J16N5000B2I100.RData")
+mean(m_ota < m_load)#
+mean(m_load < m_ota)#
+mean(m_load == m_ota)
+load("/Users/daphnaharel/Dropbox/Research/ActivePapers/OTAmethods/J16N5000B1I100.RData")
+mean(m_ota < m_load)#
+mean(m_load < m_ota)#
+mean(m_load == m_ota)
+load("/Users/daphnaharel/Dropbox/Research/ActivePapers/OTAmethods/J8N5000B1I100.RData")
+mean(m_ota < m_load)#
+mean(m_load < m_ota)#
+mean(m_load == m_ota)
+load("/Users/daphnaharel/Dropbox/Research/ActivePapers/OTAmethods/J8N5000B2I100.RData")
+mean(m_ota < m_load)#
+mean(m_load < m_ota)#
+mean(m_load == m_ota)
+table(m_load)
+mean(m_load)
+table(m_ota)
+table(m_load)/ITER
+table(m_ota)/ITER
+load("/Users/daphnaharel/Dropbox/Research/ActivePapers/OTAmethods/J8N250B1I100.RData")
+table(m_ota)/ITER#
+table(m_load)/ITER
+load("/Users/daphnaharel/Dropbox/Research/ActivePapers/OTAmethods/J8N500B1I100.RData")
+table(m_ota)/ITER#
+table(m_load)/ITER
+load("/Users/daphnaharel/Dropbox/Research/ActivePapers/OTAmethods/J8N1000B1I100.RData")
+table(m_ota)/ITER#
+table(m_load)/ITER
+load("/Users/daphnaharel/Dropbox/Research/ActivePapers/OTAmethods/J8N5000B1I100.RData")
+table(m_ota)/ITER#
+table(m_load)/ITER
+shortForms_load
+lapply(shortForms_load, function(x)x[m_load,])
+for(i in 1:100){#
+	shortForms_load[m_load,]#
+	}
+shortForms_load[m_load[i],]
+for(i in 1:100){#
+	shortForms_load[m_load[i],]#
+	}
+i=5
+shortForms_load
+for(i in 1:100){#
+	shortForms_load[[i]][m_load[i],]#
+	}
+load_items = matrix(c(0), nrow = 100, ncol = J)
+load_items = matrix(c(0), nrow = 100, ncol = J)#
+for(i in 1:100){#
+	load_items[i,] = shortForms_load[[i]][m_load[i],]#
+	}
+load_items
+n
+N
+colMeans(load_items)
+rbind(1:J, colMeans(load_items))
+ota_items = matrix(c(0), nrow = 100, ncol = J)#
+for(i in 1:100){#
+	ota_items[i,] = shortForms_ota[[i]][m_ota[i],]#
+	}
+rbind(1:J, colMeans(ota_items))
+rbind(1:J, colMeans(ota_items))#
+rbind(1:J, colMeans(load_items))
+load("/Users/daphnaharel/Dropbox/Research/ActivePapers/OTAmethods/J16N250B2I100.RData")
+load_items = matrix(c(0), nrow = 100, ncol = J)#
+for(i in 1:100){#
+	load_items[i,] = shortForms_load[[i]][m_load[i],]#
+	}#
+ota_items = matrix(c(0), nrow = 100, ncol = J)#
+for(i in 1:100){#
+	ota_items[i,] = shortForms_ota[[i]][m_ota[i],]#
+	}#
+#
+rbind(1:J, colMeans(ota_items))#
+rbind(1:J, colMeans(load_items))
+load("/Users/daphnaharel/Dropbox/Research/Completed Papers/IMTest/data/dataset.rda")
+dataset
+head(dataset)
+remove.packages(IMTest)
+remove.packages(IMTest)
+install.packages("IMTest")
+install.packages("IMTest")
